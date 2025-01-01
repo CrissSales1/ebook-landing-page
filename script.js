@@ -227,56 +227,91 @@ function restartQuiz() {
 }
 
 // Inicialização do AOS
-AOS.init({
-    duration: 800,
-    offset: 100,
-    once: true
+document.addEventListener('DOMContentLoaded', () => {
+    // Inicializa AOS com configurações otimizadas
+    AOS.init({
+        duration: 800, // Reduzido de 1200
+        once: true, // Animação acontece apenas uma vez
+        offset: 100, // Reduzido de 200
+        delay: 0, // Remove delays
+        easing: 'ease-out'
+    });
+
+    startCountdown();
+    
+    // Mostrar primeiro popup após 10 segundos
+    setTimeout(showRandomSocialProof, 10000);
+    
+    // Detectar intenção de saída apenas se não foi mostrado antes
+    if (!localStorage.getItem('exitPopupShown')) {
+        document.addEventListener('mouseleave', handleExitIntent);
+    }
 });
 
 // Contador regressivo
 function startCountdown() {
-    const endDate = new Date();
-    endDate.setHours(endDate.getHours() + 24); // 24 horas a partir de agora
+    // Define o tempo inicial (10 minutos)
+    let timeLeft = 10 * 60; // 10 minutos em segundos
 
     function updateCountdown() {
-        const now = new Date();
-        const distance = endDate - now;
+        const minutes = Math.floor(timeLeft / 60);
+        const seconds = timeLeft % 60;
 
-        const hours = Math.floor(distance / (1000 * 60 * 60));
-        const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
-        const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+        // Atualiza o display
+        document.getElementById('countdown').innerHTML = `${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;
 
-        document.querySelector('.countdown').innerHTML = `
-            <span>${hours.toString().padStart(2, '0')}h</span>:
-            <span>${minutes.toString().padStart(2, '0')}m</span>:
-            <span>${seconds.toString().padStart(2, '0')}s</span>
-        `;
-
-        if (distance < 0) {
-            clearInterval(countdownInterval);
-            document.querySelector('.countdown').innerHTML = "Oferta encerrada!";
+        if (timeLeft > 0) {
+            timeLeft--;
+            setTimeout(updateCountdown, 1000);
+        } else {
+            document.getElementById('countdown').innerHTML = "Oferta encerrada";
         }
     }
 
     updateCountdown();
-    const countdownInterval = setInterval(updateCountdown, 1000);
 }
 
-// Menu fixo com scroll
+// Controle do botão flutuante
 window.addEventListener('scroll', () => {
     const nav = document.querySelector('.fixed-nav');
-    const floatingCta = document.querySelector('.floating-cta');
+    const floatingElements = document.querySelector('.floating-elements');
+    const offerSection = document.querySelector('.offer');
+    const heroSection = document.querySelector('.hero');
     
-    if (window.scrollY > 100) {
-        nav.style.background = 'rgba(255, 255, 255, 0.95)';
-        nav.style.boxShadow = '0 2px 10px rgba(0, 0, 0, 0.1)';
-        floatingCta.style.display = 'block';
+    // Posição da seção de oferta
+    const offerPosition = offerSection.getBoundingClientRect();
+    const heroPosition = heroSection.getBoundingClientRect();
+    
+    // Mostrar botão apenas quando estiver próximo à seção de preços
+    if (window.scrollY > heroPosition.bottom && offerPosition.top > window.innerHeight) {
+        floatingElements.classList.add('show');
     } else {
-        nav.style.background = 'transparent';
-        nav.style.boxShadow = 'none';
-        floatingCta.style.display = 'none';
+        floatingElements.classList.remove('show');
+    }
+    
+    // Atualizar classe do menu fixo
+    if (window.scrollY > 50) {
+        nav.classList.add('scrolled');
+    } else {
+        nav.classList.remove('scrolled');
     }
 });
+
+// Menu fixo com scroll
+// window.addEventListener('scroll', () => {
+//     const nav = document.querySelector('.fixed-nav');
+//     const floatingCta = document.querySelector('.floating-cta');
+    
+//     if (window.scrollY > 100) {
+//         nav.style.background = 'rgba(255, 255, 255, 0.95)';
+//         nav.style.boxShadow = '0 2px 10px rgba(0, 0, 0, 0.1)';
+//         floatingCta.style.display = 'block';
+//     } else {
+//         nav.style.background = 'transparent';
+//         nav.style.boxShadow = 'none';
+//         floatingCta.style.display = 'none';
+//     }
+// });
 
 // FAQ Toggle
 function toggleFaq(element) {
@@ -286,50 +321,6 @@ function toggleFaq(element) {
     });
     if (!wasActive) {
         element.classList.add('active');
-    }
-}
-
-// Chat
-function openChat() {
-    document.getElementById('chat-widget').style.display = 'block';
-    // Mensagem inicial automática
-    setTimeout(() => {
-        addChatMessage("Olá! Como posso ajudar você hoje?", 'bot');
-    }, 500);
-}
-
-function closeChat() {
-    document.getElementById('chat-widget').style.display = 'none';
-}
-
-function addChatMessage(message, sender) {
-    const messagesContainer = document.getElementById('chat-messages');
-    const messageElement = document.createElement('div');
-    messageElement.classList.add('chat-message', sender);
-    messageElement.textContent = message;
-    messagesContainer.appendChild(messageElement);
-    messagesContainer.scrollTop = messagesContainer.scrollHeight;
-}
-
-function sendMessage() {
-    const input = document.getElementById('chat-input-field');
-    const message = input.value.trim();
-    
-    if (message) {
-        addChatMessage(message, 'user');
-        input.value = '';
-        
-        // Simular resposta do bot
-        setTimeout(() => {
-            const responses = [
-                "Claro! Posso ajudar você com isso.",
-                "Entendi sua dúvida. O e-book aborda esse tema em detalhes.",
-                "Que ótima pergunta! Deixa eu te explicar melhor...",
-                "O e-book é perfeito para isso! Ele contém estratégias práticas que vão te ajudar."
-            ];
-            const randomResponse = responses[Math.floor(Math.random() * responses.length)];
-            addChatMessage(randomResponse, 'bot');
-        }, 1000);
     }
 }
 
@@ -357,49 +348,62 @@ setInterval(showRandomSocialProof, 30000);
 
 // Prévia dos capítulos
 function showChapterPreview(chapterNumber) {
-    const previews = {
+    const chapters = {
         1: {
-            title: "Autoconhecimento e Amor Próprio",
-            content: "Neste capítulo, você vai descobrir como desenvolver uma base sólida de amor próprio e autoestima..."
+            title: 'Autoconhecimento e Amor Próprio',
+            content: `
+                <h4>Neste capítulo você vai descobrir:</h4>
+                <ul>
+                    <li>Como desenvolver uma autoestima saudável em qualquer idade</li>
+                    <li>Exercícios práticos de autocuidado e amor próprio</li>
+                    <li>Como identificar e superar crenças limitantes sobre relacionamentos</li>
+                    <li>O poder da maturidade emocional nos relacionamentos</li>
+                </ul>
+            `
         },
         2: {
-            title: "Padrões de Relacionamento",
-            content: "Aprenda a identificar e transformar padrões que podem estar sabotando sua vida amorosa..."
+            title: 'Padrões de Relacionamento',
+            content: `
+                <h4>Principais tópicos abordados:</h4>
+                <ul>
+                    <li>Como identificar padrões repetitivos em relacionamentos</li>
+                    <li>Técnicas para transformar dinâmicas prejudiciais</li>
+                    <li>O impacto das experiências passadas nas relações atuais</li>
+                    <li>Construindo novos padrões saudáveis de relacionamento</li>
+                </ul>
+            `
         },
         3: {
-            title: "Comunicação Assertiva",
-            content: "Desenvolva habilidades de comunicação que fortalecem seus relacionamentos..."
+            title: 'Comunicação Assertiva',
+            content: `
+                <h4>Você vai aprender:</h4>
+                <ul>
+                    <li>Técnicas práticas de comunicação não-violenta</li>
+                    <li>Como expressar necessidades e estabelecer limites saudáveis</li>
+                    <li>Estratégias para resolver conflitos de forma construtiva</li>
+                    <li>O poder da escuta ativa nos relacionamentos maduros</li>
+                </ul>
+            `
         }
     };
 
-    const preview = previews[chapterNumber];
+    const chapter = chapters[chapterNumber];
+    
     Swal.fire({
-        title: preview.title,
-        text: preview.content,
-        icon: 'info',
-        confirmButtonText: 'Quero o E-book Completo',
+        title: chapter.title,
+        html: chapter.content,
+        confirmButtonText: 'Quero Aprender Mais',
         confirmButtonColor: '#9f7aea',
-        showCancelButton: true,
-        cancelButtonText: 'Fechar',
+        showCloseButton: true,
+        customClass: {
+            container: 'chapter-preview-modal'
+        }
     }).then((result) => {
         if (result.isConfirmed) {
             document.querySelector('#oferta').scrollIntoView({ behavior: 'smooth' });
         }
     });
 }
-
-// Inicialização
-document.addEventListener('DOMContentLoaded', () => {
-    startCountdown();
-    
-    // Mostrar primeiro popup após 10 segundos
-    setTimeout(showRandomSocialProof, 10000);
-    
-    // Detectar intenção de saída apenas se não foi mostrado antes
-    if (!localStorage.getItem('exitPopupShown')) {
-        document.addEventListener('mouseleave', handleExitIntent);
-    }
-});
 
 function handleExitIntent(e) {
     if (e.clientY < 0) {

@@ -232,21 +232,34 @@ nav {
 }
 
 .hero-image {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
     position: relative;
 }
 
-.floating-image {
-    width: 100%;
+.hero-image img {
+    max-width: 100%;
     height: auto;
     border-radius: 20px;
-    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
-    animation: float 6s ease-in-out infinite;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+    transition: transform 0.3s ease;
 }
 
-@keyframes float {
-    0% { transform: translateY(0px); }
-    50% { transform: translateY(-20px); }
-    100% { transform: translateY(0px); }
+.hero-image img:hover {
+    transform: translateY(-10px);
+}
+
+@media (max-width: 768px) {
+    .hero-image {
+        margin-top: 30px;
+    }
+    
+    .hero-image img {
+        max-width: 80%;
+        margin: 0 auto;
+    }
 }
 
 /* Botões */
@@ -278,12 +291,13 @@ nav {
 
 /* Seções gerais */
 section {
-    padding: 100px 0;
+    padding: 40px 0;
+    margin-bottom: 0;
 }
 
 .section-header {
     text-align: center;
-    margin-bottom: 60px;
+    margin-bottom: 30px;
 }
 
 .section-tag {
@@ -437,25 +451,29 @@ section {
 }
 
 .price-tag {
-    margin: 30px 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin: 20px 0;
 }
 
-.price .original {
+.original-price {
+    color: #666;
     text-decoration: line-through;
-    font-size: 1.5rem;
-    opacity: 0.7;
-    display: block;
+    font-size: 1.2rem;
 }
 
-.price .current {
-    font-size: 3.5rem;
-    font-weight: bold;
-    display: block;
+.current-price {
+    color: var(--primary-color);
+    font-size: 2.5rem;
+    font-weight: 700;
+    margin: 5px 0;
 }
 
 .installments {
-    font-size: 1.1rem;
-    opacity: 0.9;
+    color: #666;
+    font-size: 1rem;
+    margin-top: 5px;
 }
 
 .bonus {
@@ -486,10 +504,215 @@ section {
     color: var(--warning-color);
 }
 
+.offer-image {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+}
+
 .offer-image img {
-    width: 100%;
+    max-width: 100%;
+    height: auto;
     border-radius: 20px;
-    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+    transition: transform 0.3s ease;
+}
+
+.offer-image img:hover {
+    transform: translateY(-10px);
+}
+
+@media (max-width: 768px) {
+    .offer-image {
+        margin-top: 30px;
+    }
+    
+    .offer-image img {
+        max-width: 90%;
+        margin: 0 auto;
+    }
+}
+
+.offer-content {
+    flex: 1;
+    padding: 40px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+}
+
+.offer-content .cta-button {
+    margin-top: 30px;
+    font-size: 1.2rem;
+    padding: 15px 40px;
+    background: linear-gradient(135deg, var(--primary-color), #8b5cf6);
+    border: none;
+    color: white;
+    border-radius: 30px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    font-weight: 600;
+    transition: all 0.3s ease;
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+}
+
+.offer-content .cta-button:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 15px 30px rgba(0, 0, 0, 0.15);
+}
+
+.offer-content .cta-button i {
+    margin-left: 10px;
+    transition: transform 0.3s ease;
+}
+
+.offer-content .cta-button:hover i {
+    transform: translateX(5px);
+}
+
+.bonus {
+    list-style: none;
+    padding: 0;
+    margin: 20px 0;
+    text-align: left;
+}
+
+.bonus li {
+    margin: 15px 0;
+    display: flex;
+    align-items: center;
+    color: white;
+    font-size: 1.1rem;
+}
+
+.bonus li i {
+    margin-right: 10px;
+    color: var(--primary-color);
+    font-size: 1.2rem;
+}
+
+@media (max-width: 768px) {
+    .offer-content {
+        padding: 20px;
+    }
+    
+    .offer-content .cta-button {
+        width: 100%;
+        max-width: 300px;
+        padding: 12px 30px;
+        font-size: 1.1rem;
+    }
+    
+    .bonus li {
+        font-size: 1rem;
+    }
+}
+
+/* Estilos da seção de preços */
+.price-box {
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 15px;
+    padding: 25px;
+    margin: 30px 0;
+    position: relative;
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    backdrop-filter: blur(10px);
+}
+
+.discount-badge {
+    position: absolute;
+    top: -15px;
+    right: -15px;
+    background: #ff4d4d;
+    color: white;
+    padding: 10px 20px;
+    border-radius: 25px;
+    font-weight: 700;
+    font-size: 1.3rem;
+    box-shadow: 0 4px 15px rgba(255, 77, 77, 0.3);
+    transform: rotate(5deg);
+    border: 2px solid rgba(255, 255, 255, 0.3);
+}
+
+.price-tag {
+    text-align: center;
+    padding: 15px;
+}
+
+.original-price {
+    color: rgba(255, 255, 255, 0.9);
+    text-decoration: line-through;
+    font-size: 1.4rem;
+    display: block;
+    margin-bottom: 5px;
+    font-weight: 500;
+}
+
+.current-price {
+    color: white;
+    font-size: 4rem;
+    font-weight: 800;
+    display: block;
+    margin: 10px 0;
+    text-shadow: 2px 2px 0 rgba(0, 0, 0, 0.1);
+    letter-spacing: -1px;
+}
+
+.installments {
+    color: white;
+    font-size: 1.2rem;
+    display: block;
+    margin-top: 5px;
+    font-weight: 500;
+}
+
+.price-guarantee {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    margin-top: 15px;
+    padding-top: 15px;
+    border-top: 1px solid rgba(255, 255, 255, 0.3);
+    color: white;
+    font-weight: 500;
+}
+
+.price-guarantee i {
+    font-size: 1.2rem;
+    color: white;
+}
+
+/* Floating price styles */
+.floating-cta {
+    background: white;
+    padding: 15px;
+    border-radius: 10px;
+    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+}
+
+.floating-price {
+    text-align: center;
+    margin-bottom: 15px;
+}
+
+.floating-price .old-price {
+    color: #666;
+    text-decoration: line-through;
+    font-size: 1rem;
+    display: block;
+    margin-bottom: 5px;
+}
+
+.floating-price .current-price {
+    color: var(--primary-color);
+    font-size: 1.8rem;
+    font-weight: 700;
+    display: block;
+    margin: 5px 0;
 }
 
 /* Testimonials Section */
@@ -850,7 +1073,7 @@ footer {
 /* Prévia do conteúdo */
 .preview-section {
     background: var(--background-light);
-    padding: 80px 0;
+    padding: 40px 0;
 }
 
 .chapters-grid {
@@ -866,6 +1089,7 @@ footer {
     border-radius: 15px;
     box-shadow: 0 5px 20px rgba(0, 0, 0, 0.05);
     transition: transform 0.3s ease;
+    margin-bottom: 20px;
 }
 
 .chapter-card:hover {
@@ -921,7 +1145,7 @@ footer {
 
 /* FAQ Section */
 .faq-section {
-    padding: 80px 0;
+    padding: 40px 0;
     background: var(--background-light);
 }
 
@@ -971,71 +1195,98 @@ footer {
     position: fixed;
     bottom: 20px;
     right: 20px;
-    z-index: 999;
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
+    z-index: 1000;
+    opacity: 0;
+    transform: translateY(20px);
+    transition: all 0.3s ease;
+    pointer-events: none;
+}
+
+.floating-elements.show {
+    opacity: 1;
+    transform: translateY(0);
+    pointer-events: all;
 }
 
 .floating-cta {
-    background: white;
-    padding: 15px;
-    border-radius: 10px;
-    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
-    display: none;
+    background: linear-gradient(135deg, var(--primary-color), #8b5cf6);
+    padding: 15px 20px;
+    border-radius: 15px;
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.floating-cta:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.2);
 }
 
 .floating-price {
-    display: flex;
-    flex-direction: column;
-    align-items: flex-end;
+    text-align: center;
     margin-bottom: 10px;
 }
 
-.old-price {
+.floating-price .old-price {
+    color: rgba(255, 255, 255, 0.7);
     text-decoration: line-through;
-    color: var(--light-text);
     font-size: 0.9rem;
+    display: block;
+    margin-bottom: 2px;
 }
 
-.current-price {
-    color: var(--primary-color);
-    font-size: 1.2rem;
-    font-weight: 600;
+.floating-price .current-price {
+    color: white;
+    font-size: 1.8rem;
+    font-weight: 800;
+    display: block;
+    margin: 5px 0;
+    text-shadow: 1px 1px 0 rgba(0, 0, 0, 0.1);
 }
 
 .floating-button {
-    display: block;
-    background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
-    color: white;
-    text-decoration: none;
-    padding: 10px 20px;
+    display: inline-block;
+    background: white;
+    color: var(--primary-color);
+    padding: 10px 25px;
     border-radius: 25px;
-    text-align: center;
-    font-weight: 500;
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 1.1rem;
+    transition: all 0.3s ease;
+    border: 2px solid rgba(255, 255, 255, 0.2);
 }
 
-.chat-button {
-    background: var(--primary-color);
-    color: white;
-    border: none;
-    border-radius: 50%;
-    width: 60px;
-    height: 60px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
-    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+.floating-button:hover {
+    background: rgba(255, 255, 255, 0.9);
+    transform: translateY(-2px);
 }
 
-.chat-button i {
-    font-size: 1.5rem;
-}
-
-.chat-button span {
-    font-size: 0.8rem;
+@media (max-width: 768px) {
+    .floating-elements {
+        bottom: 10px;
+        right: 10px;
+        left: 10px;
+    }
+    
+    .floating-cta {
+        width: 100%;
+        left: 0;
+        bottom: 0;
+        border-radius: 0;
+    }
+    
+    .chat-widget {
+        width: 100%;
+        height: 100%;
+        bottom: 0;
+        right: 0;
+        border-radius: 0;
+    }
+    
+    .chat-messages {
+        height: calc(100vh - 130px);
+    }
 }
 
 /* Chat Widget */
@@ -1195,4 +1446,20 @@ footer {
 
 .skip-link:focus {
     top: 0;
+}
+
+/* Ajustes de animação */
+[data-aos] {
+    transform: translateY(0) !important;
+}
+
+.fade-up {
+    opacity: 0;
+    transform: translateY(20px);
+    transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+}
+
+.fade-up.aos-animate {
+    opacity: 1;
+    transform: translateY(0);
 }
